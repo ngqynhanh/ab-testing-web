@@ -1,8 +1,12 @@
 node_modules/
 .env
+.env.*
+!.env.example
 .netlify/
 .dev-state.json
 .dev-state.tmp
 .dev-invites.txt
 .npm-cache/
 *.zip
+.neon
+.env.local

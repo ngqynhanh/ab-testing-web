@@ -1,4 +1,8 @@
 process.env.PORT='0';
+process.env.STUDY_STORAGE='file';
+process.env.ADMIN_TOKEN='local-demo-admin-key-change-before-production';
+process.env.STUDY_MODE='pilot';
+process.env.STUDY_OPEN='true';
 const {server}=await import('./dev.mjs');
 if(!server.listening)await new Promise(resolve=>server.once('listening',resolve));
 const base='http://127.0.0.1:'+server.address().port;

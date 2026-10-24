@@ -25,7 +25,26 @@ npm run dev
 
 Mở http://127.0.0.1:4173 và http://127.0.0.1:4173/admin.html.
 
-Local demo dùng file `.dev-state.json`, không kết nối production DB. Mã mời ban đầu trong `.dev-invites.txt`. Admin key demo được in trong terminal. Local demo chỉ lắng nghe loopback. Không đưa file dữ liệu thử hoặc mã mời lên GitHub.
+App tự đọc `.env.local` (ưu tiên) hoặc `.env`, không ghi đè biến đã được shell/Netlify cung cấp. Khi có DATABASE_URL, `npm run dev` dùng PostgreSQL thật. Khóa quản trị là ADMIN_TOKEN trong file môi trường, không phải khóa demo. Khi không có DATABASE_URL hoặc đặt STUDY_STORAGE=file, local demo mới dùng `.dev-state.json` và mã trong `.dev-invites.txt`. Không đưa file môi trường, dữ liệu thử hoặc mã mời lên GitHub.
+
+## Neon đã liên kết
+
+Neon project `spring-cell-86795344`, org `org-shy-sky-19668972`, branch `production`. Cấu hình khai báo trong `neon.ts`; `.neon` và `.env.local` được Git bỏ qua. Chỉ sử dụng dịch vụ Postgres.
+
+```powershell
+neon deploy
+npm run db:migrate
+npm run build
+npm run dev
+```
+
+`neon deploy` kéo DATABASE_URL (pooled), DATABASE_URL_UNPOOLED (direct) và NEON_BRANCH. Migration có mã nguồn tại `migrations/001_studies.sql`, chạy bằng URL direct nếu có. App dùng Neon Pool qua WebSocket cho Neon, giữ interactive transaction để phân nhóm an toàn. Pool được đóng sau mỗi transaction; URL PostgreSQL thường vẫn hỗ trợ driver pg hiện có. Chạy migration trước khi phát hành, vì API không còn tự tạo bảng mỗi request.
+
+`npm run test:neon` khởi động app, dùng một study ID ngẫu nhiên riêng để kiểm tra API/database thật: lưu 8 phản hồi, retry, resume, export, 17 đăng ký đồng thời với chỉ tiêu 16, rồi chỉ xóa study thử do lệnh đó tạo. Không đổi hoặc xóa study nghiên cứu. Lệnh này cần kết nối mạng và DATABASE_URL đã cấu hình.
+
+CLI đã cài có thể yêu cầu Node >=22.20 khi dùng phần skills. Nếu máy vẫn là Node 22.13, chạy CLI bằng Node mới qua `npm exec --yes --package=node@22 -- node <đường-dẫn-neon/dist/cli.js> ...`; app vẫn chạy được trên Node >=22.
+
+Việc deploy Neon không publish giao diện Netlify và không tự đồng bộ secrets sang Netlify. Đặt DATABASE_URL, ADMIN_TOKEN và cấu hình study vào Netlify Functions environment, chạy migration, rồi deploy web. Giữ DATABASE_URL_UNPOOLED ở máy/CI để chạy migration.
 
 `npm run test:http` khởi động server ở cổng tạm và chạy một phiên pilot bằng HTTP; nó ghi dữ liệu thử vào kho local. Không chạy lệnh này trong lúc đang dùng local demo với dữ liệu cần giữ. Unit/API tests (`npm test`) dùng state trong bộ nhớ và không cần database.
 
@@ -36,7 +55,7 @@ Local demo dùng file `.dev-state.json`, không kết nối production DB. Mã m
 1. Tạo một repository GitHub cho NỘI DUNG thư mục `retargeting-study` (package.json và netlify.toml ở gốc repo). Nếu đưa toàn bộ workspace lên, phải đặt Base directory = retargeting-study. Không đưa checkpoints hoặc dữ liệu người tham gia vào repo.
 2. Trong Netlify chọn Add new project / Import an existing project, kết nối GitHub và chọn repository.
 3. Build command: `npm run build`; Publish directory: `public`; Functions directory được khai báo trong netlify.toml.
-4. Tạo PostgreSQL database riêng. Lấy connection string được nhà cung cấp khuyến nghị cho serverless, có SSL verification. Không chia sẻ connection string công khai. Ứng dụng tự tạo bảng `retargeting_studies`; tài khoản DB cần quyền CREATE và SELECT/INSERT/UPDATE bảng đó. Nếu dùng DB với quyền hạn chế, nhờ quản trị tạo bảng trước theo schema trong lib/store.mjs.
+4. Dùng database Neon đã liên kết hoặc PostgreSQL riêng. Lấy connection string được nhà cung cấp khuyến nghị cho serverless, có SSL verification. Không chia sẻ connection string công khai. Chạy `npm run db:migrate` để tạo bảng `retargeting_studies`; tài khoản chạy migration cần quyền CREATE, app cần SELECT/INSERT/UPDATE bảng đó. Nếu dùng DB với quyền hạn chế, nhờ quản trị chạy `migrations/001_studies.sql` trước.
 5. Trong Project configuration > Environment variables của Netlify, đặt các giá trị bên dưới, có scope Functions. Không đặt secrets trong netlify.toml hoặc JavaScript frontend. Nếu sửa env sau deploy, redeploy.
 
 | Variable | Thiết lập |
