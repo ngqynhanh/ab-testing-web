@@ -1,0 +1,14 @@
+.git
+.env
+.env.*
+.neon
+.netlify
+.npm-cache
+.dev-*
+node_modules
+netlify
+test
+test-*.mjs
+preview*.png
+update*.py
+*.zip

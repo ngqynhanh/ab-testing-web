@@ -2,7 +2,7 @@ import './lib/env.mjs';
 import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {route} from './netlify/functions/api.mjs';
+import {handleRequest as route} from './lib/vercel.mjs';
 import {initial} from './lib/study.mjs';
 import {transaction} from './lib/store.mjs';
 const root=path.resolve('public');

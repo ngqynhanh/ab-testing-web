@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "node dev.mjs",
     "build": "node scripts-check.mjs",
-    "test": "node --test test/criteria.test.mjs test/api-v2.test.mjs",
+    "test": "node --test test/criteria.test.mjs test/api-v2.test.mjs test/vercel.test.mjs",
     "test:http": "node test-http.mjs",
     "db:migrate": "node migrate.mjs",
     "test:neon": "node test-neon.mjs"
