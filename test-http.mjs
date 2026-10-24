@@ -8,7 +8,7 @@ if(!server.listening)await new Promise(resolve=>server.once('listening',resolve)
 const base='http://127.0.0.1:'+server.address().port;
 const headers={Authorization:'Bearer local-demo-admin-key-change-before-production'};
 let r=await fetch(base+'/');if(!r.ok)throw Error('homepage');
-r=await fetch(base+'/api/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({selectedQuestions:['distortion','overall'],consent:true})});
+r=await fetch(base+'/api/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile:{ageGroup:'25_34',gender:'prefer_not',career:'employed',fieldOfWork:'it_ai',imageExperience:'basic',vision:'clear_with_glasses',priorParticipation:'no'},selectedQuestions:['distortion','overall'],consent:true})});
 let s=await r.json();if(!s.token)throw Error(JSON.stringify(s));const token=s.token;
 for(let i=0;i<16;i++){
  for(const f of [s.trial.original,s.trial.left,s.trial.right])if(!(await fetch(base+'/stimuli/'+f)).ok)throw Error('image failed');

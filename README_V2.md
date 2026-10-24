@@ -1,3 +1,5 @@
+> Cập nhật V2.2: biểu mẫu người tham gia có 7 câu hỏi; giới tính/nghề nghiệp tùy chọn. Xem README_PARTICIPANTS.md để biết danh mục, dữ liệu CSV và cách cập nhật.
+
 > Cập nhật 2.1: người tham gia được chọn 2 hoặc cả 3 tiêu chí. Mỗi tiêu chí 8 lượt, tổng 16/24. Phiên V2 cũ có 16 lượt vẫn tiếp tục được; nếu đã thu chính thức, nên dùng STUDY_ID mới khi đổi protocol.
 
 # Image Study V2 — chọn ít nhất 2/3 tiêu chí, 8 lượt/tiêu chí
