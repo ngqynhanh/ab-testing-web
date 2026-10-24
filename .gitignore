@@ -1,0 +1,8 @@
+node_modules/
+.env
+.netlify/
+.dev-state.json
+.dev-state.tmp
+.dev-invites.txt
+.npm-cache/
+*.zip
