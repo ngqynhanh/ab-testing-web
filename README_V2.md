@@ -1,18 +1,20 @@
-# Image Study V2 — chọn 2/3 tiêu chí, 8 lượt/tiêu chí
+> Cập nhật 2.1: người tham gia được chọn 2 hoặc cả 3 tiêu chí. Mỗi tiêu chí 8 lượt, tổng 16/24. Phiên V2 cũ có 16 lượt vẫn tiếp tục được; nếu đã thu chính thức, nên dùng STUDY_ID mới khi đổi protocol.
+
+# Image Study V2 — chọn ít nhất 2/3 tiêu chí, 8 lượt/tiêu chí
 
 ## Thay đổi
 
 - Người tham gia không nhập mã mời, không có tài khoản, không tạo hash danh tính/fingerprint.
-- Người dùng chọn đúng hai tiêu chí trong ba: distortion, preservation, overall.
-- Mỗi tiêu chí lấy ngẫu nhiên 8 cặp: 2 cặp Ours-vs-RETVI, 2 Cycle-IR, 2 Self-Play-RL, 2 Linear. Tổng 16 ảnh nguồn không lặp/người.
-- Mỗi baseline trong mỗi tiêu chí có một lượt Ours-trái và một lượt Ours-phải. Thứ tự hai tiêu chí và các lượt được xáo trộn. Bộ ảnh/lượt được lưu trên server một lần để không đổi khi reload.
+- Người dùng chọn hai hoặc cả ba tiêu chí trong ba: distortion, preservation, overall.
+- Mỗi tiêu chí lấy ngẫu nhiên 8 cặp: 2 cặp Ours-vs-RETVI, 2 Cycle-IR, 2 Self-Play-RL, 2 Linear. Tổng 16 hoặc 24 ảnh nguồn không lặp/người.
+- Mỗi baseline trong mỗi tiêu chí có một lượt Ours-trái và một lượt Ours-phải. Thứ tự các tiêu chí và các lượt được xáo trộn. Bộ ảnh/lượt được lưu trên server một lần để không đổi khi reload.
 - Ba lựa chọn A / B / Không phân biệt được. Câu hỏi và hướng dẫn thay đổi theo tiêu chí.
-- Cả pilot và research đều dùng 16 lượt. Pilot không tính vào thống kê chính thức.
+- Cả pilot và research đều dùng 16 hoặc 24 lượt. Pilot không tính vào thống kê chính thức.
 - Trang quản trị thống kê riêng từng tiêu chí và baseline. CSV có question_id và question_prompt.
 
 ## Không dùng hash người tham gia
 
-Ứng dụng vẫn sinh UUID ngẫu nhiên cho phiên để nhóm 16 phản hồi và khóa phiên ngẫu nhiên để resume/chống ghi trùng. Không có mã người dùng phải nhập, không băm tên/email/thiết bị, không có fingerprint. UUID không suy ra được danh tính người tham gia. Khóa phiên lưu ở localStorage và DB, không hiển thị trong UI hoặc CSV; JSON backup có khóa này nên cần bảo quản riêng. Không có cơ chế bảo đảm một người chỉ làm một lần sau khi họ xóa localStorage hoặc đổi trình duyệt; cần thông báo mỗi người chỉ tham gia một lần và tuyển mẫu phù hợp.
+Ứng dụng vẫn sinh UUID ngẫu nhiên cho phiên để nhóm 16 hoặc 24 phản hồi và khóa phiên ngẫu nhiên để resume/chống ghi trùng. Không có mã người dùng phải nhập, không băm tên/email/thiết bị, không có fingerprint. UUID không suy ra được danh tính người tham gia. Khóa phiên lưu ở localStorage và DB, không hiển thị trong UI hoặc CSV; JSON backup có khóa này nên cần bảo quản riêng. Không có cơ chế bảo đảm một người chỉ làm một lần sau khi họ xóa localStorage hoặc đổi trình duyệt; cần thông báo mỗi người chỉ tham gia một lần và tuyển mẫu phù hợp.
 
 ## Câu hỏi
 
@@ -24,16 +26,16 @@ Câu 2 được định nghĩa là giữ nội dung/chủ thể chính, bao gồ
 
 ## Chỉ tiêu
 
-TARGET_PER_QUESTION mặc định 30. Mỗi người làm hai tiêu chí:
+TARGET_PER_QUESTION mặc định 30. Mỗi người làm hai hoặc ba tiêu chí:
 
 | Chỉ tiêu/tiêu chí | Người hoàn thành đủ 16 lượt | Tổng đánh giá | Đánh giá/tiêu chí | Đánh giá/baseline/tiêu chí |
 |---|---|---|---|---|
-| 20 | 30 | 480 | 160 | 40 |
-| 30 | 45 | 720 | 240 | 60 |
+| 20 | 20–30 | 480 | 160 | 40 |
+| 30 | 30–45 | 720 | 240 | 60 |
 
-Đây là kế hoạch phân bổ, không phải kết quả power analysis. Chỉ tiêu phải là số chẵn để đủ cả ba tiêu chí khi mỗi phiên chọn hai. Có thể dùng 20, 22, 24, 26, 28, 30.
+Đây là kế hoạch phân bổ, không phải kết quả power analysis. Chỉ tiêu là số nguyên từ 2 trở lên, thường dùng 20–30. Số người thực tế phụ thuộc có bao nhiêu người chọn cả ba tiêu chí.
 
-Chỉ người hoàn thành đủ cả 16 lượt mới tính vào completed cho hai tiêu chí. Active giữ chỗ ở cả hai. Các cặp lựa chọn tự đóng khi đầy hoặc khi tiếp tục nhận cặp đó sẽ khiến một tiêu chí bị thiếu không thể ghép đủ hai. Như vậy người đến sau có thể bị giới hạn cặp tiêu chí. Đây là lựa chọn của người tham gia trong những cặp còn mở, không phải phân bổ tiêu chí hoàn toàn ngẫu nhiên. Nêu điều này khi báo cáo kết quả.
+Chỉ người hoàn thành đủ 16 hoặc 24 lượt đã đăng ký mới tính vào completed cho tất cả tiêu chí đã chọn. Active giữ chỗ ở tất cả tiêu chí đã chọn. Các cặp lựa chọn tự đóng khi đầy hoặc khi tiếp tục nhận cặp đó sẽ khiến một tiêu chí bị thiếu không thể ghép đủ hai hoặc ba. Như vậy người đến sau có thể bị giới hạn cặp tiêu chí. Đây là lựa chọn của người tham gia trong những cặp còn mở, không phải phân bổ tiêu chí hoàn toàn ngẫu nhiên. Nêu điều này khi báo cáo kết quả.
 
 Đóng phiên bỏ dở trong admin để giải phóng chỗ; phản hồi dở vẫn ở CSV với status released. Không tự loại người dựa trên sở thích. Ảnh được lấy mẫu ngẫu nhiên theo baseline, không bảo đảm mọi cặp trong 80 ảnh được đánh giá bằng nhau; 20–30 người/tiêu chí không đủ phủ nhiều lượt cho từng ảnh. Phân tích theo tiêu chí với sự phụ thuộc theo người và ảnh, không coi mọi lượt là độc lập.
 
@@ -45,7 +47,7 @@ Chỉ người hoàn thành đủ cả 16 lượt mới tính vào completed cho
 4. Đặt `TARGET_PER_QUESTION=30` (hoặc 20). `TARGET_PER_CONDITION` không còn được sử dụng.
 5. Đặt STUDY_MODE=pilot và STUDY_OPEN=true để test; sau khi sẵn sàng chuyển research, dùng study ID research mới.
 6. Giữ quy trình xử lý ảnh đã thống nhất; research vẫn cần DIMENSIONS_ACKNOWLEDGED=true. Cờ này không sửa ảnh. Bộ nguồn vẫn có sai lệch kích thước baseline đã báo trước.
-7. Redeploy; kiểm tra bằng trang chủ. Phải thấy chọn 2/3 tiêu chí, không thấy ô mã mời. Trên admin phải thấy 3 chỉ tiêu, không còn 16 nhóm.
+7. Redeploy; kiểm tra bằng trang chủ. Phải thấy chọn 2 hoặc cả 3 tiêu chí, không thấy ô mã mời. Trên admin phải thấy 3 chỉ tiêu, không còn 16 nhóm.
 8. Gửi một link chung cho người tham gia. Không cần tạo hoặc phát mã. Theo dõi completed/active, xử lý bỏ dở, tải CSV/JSON định kỳ.
 
 Ví dụ cấu hình chính thức:

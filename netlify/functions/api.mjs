@@ -6,8 +6,8 @@ export async function route(request,tx=transaction){
  try{
  const url=new URL(request.url),path=url.pathname.split('/').filter(Boolean).at(-1);
  const json=data=>Response.json(data,{headers:{'Cache-Control':'no-store'}});
- const target=Number(process.env.TARGET_PER_QUESTION||30);if(!Number.isInteger(target)||target<2||target%2!==0)deny('TARGET_PER_QUESTION phải là số chẵn từ 2 trở lên (ví dụ 20 hoặc 30).',503);
- if(request.method==='GET'&&path==='config'){const mode=process.env.STUDY_MODE||'pilot';return json({mode,open:process.env.STUDY_OPEN==='true',studyId:process.env.STUDY_ID||'retargeting-criteria-v2',questions,availablePairs:mode==='pilot'?questions.flatMap((q,i)=>questions.slice(i+1).map(r=>[q.id,r.id])):await tx(s=>availablePairs(s,target))});}
+ const target=Number(process.env.TARGET_PER_QUESTION||30);if(!Number.isInteger(target)||target<2)deny('TARGET_PER_QUESTION phải là số nguyên từ 2 trở lên (ví dụ 20 hoặc 30).',503);
+ if(request.method==='GET'&&path==='config'){const mode=process.env.STUDY_MODE||'pilot';return json({mode,open:process.env.STUDY_OPEN==='true',studyId:process.env.STUDY_ID||'retargeting-criteria-v2',questions,availablePairs:mode==='pilot'?[...questions.flatMap((q,i)=>questions.slice(i+1).map(r=>[q.id,r.id])),questions.map(q=>q.id)]:await tx(s=>availablePairs(s,target))});}
  const token=(request.headers.get('authorization')||'').replace(/^Bearer /,'');
  if(path.startsWith('admin-')){const secret=process.env.ADMIN_TOKEN||'';if(secret.length<32)deny('Chưa cấu hình ADMIN_TOKEN tối thiểu 32 ký tự.',503);const a=Buffer.from(token),b=Buffer.from(secret);if(a.length!==b.length||!timingSafeEqual(a,b))deny('Không có quyền quản trị.',401);}
  const body=async()=>{const raw=await request.text();if(raw.length>8000)deny('Yêu cầu quá lớn.',413);try{return JSON.parse(raw);}catch{deny('JSON không hợp lệ.',400);}};
