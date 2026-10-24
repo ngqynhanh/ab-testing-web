@@ -1,3 +1,5 @@
+> V2: Thiết kế hiện tại là 2/3 tiêu chí, 8 lượt/tiêu chí. Đọc README_V2.md. Nội dung bên dưới là tài liệu bản cũ và không dùng để cấu hình V2.
+
 # Image Study — website đánh giá retargeting
 
 Giao diện tiếng Việt, 40 lượt/người, 16 điều kiện cân bằng (8 nhóm x A/B), mã mời dùng một lần, lưu từng lượt trên máy chủ, tiếp tục phiên trên cùng trình duyệt, thử gửi lại không nhân đôi phản hồi, bảng quản trị và CSV/JSON export.
@@ -107,3 +109,4 @@ Sao lưu CSV/JSON định kỳ và bật backup của nhà cung cấp DB. Dữ l
 - https://docs.netlify.com/build/functions/environment-variables/
 - https://node-postgres.com/features/transactions
 - https://node-postgres.com/features/ssl
+

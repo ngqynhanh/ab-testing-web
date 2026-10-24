@@ -5,6 +5,8 @@ node_modules/
 .netlify/
 .dev-state.json
 .dev-state.tmp
+.dev-state-v2.json
+.dev-state-v2.tmp
 .dev-invites.txt
 .npm-cache/
 *.zip
